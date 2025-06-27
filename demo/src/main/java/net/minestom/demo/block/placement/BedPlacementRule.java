@@ -1,9 +1,14 @@
 package net.minestom.demo.block.placement;
 
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * https://gist.github.com/mworzala/0676c28343310458834d70ed29b11a37
@@ -20,22 +25,23 @@ public class BedPlacementRule extends BlockPlacementRule {
 
     @Override
     public @NotNull BlockMutation blockPlace(@NotNull BlockMutation mutation) {
-        System.out.println("testa");
-//        var playerPosition = Objects.requireNonNullElse(placementState.playerPosition(), Pos.ZERO);
-//        var facing = BlockFace.fromYaw(playerPosition.yaw());
-//
-//        //todo bad code using instance directly
-//        if (!(placementState.instance() instanceof Instance instance)) return null;
-//
-//        var headPosition = placementState.placePosition().relative(facing);
-//        if (!instance.getBlock(headPosition, Block.Getter.Condition.TYPE).isAir())
-//            return null;
-//
-//        var headBlock = this.block.withProperty(PROP_PART, "head")
-//                .withProperty(PROP_FACING, facing.name().toLowerCase());
-//        instance.setBlock(headPosition, headBlock);
-//
-//        return headBlock.withProperty(PROP_PART, "foot");
+        if( !(mutation instanceof BlockMutation.Player mut)) {
+            return mutation; // not a player placement
+        }
+        var playerPosition = mut.player().getPosition();
+        var facing = BlockFace.fromYaw(playerPosition.yaw());
+
+        //todo bad code using instance directly
+        if (!(mut.instance() instanceof Instance instance)) return null;
+
+        var headPosition = mutation.blockPosition().relative(facing);
+        if (!instance.getBlock(headPosition, Block.Getter.Condition.TYPE).isAir())
+            return null;
+
+        var headBlock = this.block.withProperty(PROP_PART, "head")
+                .withProperty(PROP_FACING, facing.name().toLowerCase());
+        instance.setBlock(headPosition, headBlock);
+
         return mutation;
     }
 }
