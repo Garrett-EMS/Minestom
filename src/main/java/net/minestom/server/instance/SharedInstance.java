@@ -5,6 +5,7 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.instance.block.BlockHandler;
+import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.generator.Generator;
 import net.minestom.server.utils.chunk.ChunkSupplier;
 import org.jetbrains.annotations.NotNull;
@@ -32,13 +33,13 @@ public class SharedInstance extends Instance {
     }
 
     @Override
-    public boolean placeBlock(@NotNull BlockHandler.Placement placement, boolean doBlockUpdates) {
-        return instanceContainer.placeBlock(placement, doBlockUpdates);
+    public boolean placeBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates) {
+        return instanceContainer.placeBlock(mutation, doBlockUpdates);
     }
 
     @Override
-    public boolean breakBlock(@NotNull Player player, @NotNull Point blockPosition, @NotNull BlockFace blockFace, boolean doBlockUpdates) {
-        return instanceContainer.breakBlock(player, blockPosition, blockFace, doBlockUpdates);
+    public boolean breakBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates) {
+        return instanceContainer.breakBlock(mutation, doBlockUpdates);
     }
 
     @Override

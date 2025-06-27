@@ -10,6 +10,7 @@ import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockHandler;
+import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.heightmap.Heightmap;
 import net.minestom.server.instance.heightmap.MotionBlockingHeightmap;
 import net.minestom.server.instance.heightmap.WorldSurfaceHeightmap;
@@ -77,10 +78,15 @@ public class DynamicChunk extends Chunk {
     }
 
     @Override
-    public void setBlock(int x, int y, int z, @NotNull Block block,
-                         @Nullable BlockHandler.Placement placement,
-                         @Nullable BlockHandler.Destroy destroy) {
+    public void setBlock(@NotNull BlockMutation mutation) {
         final DimensionType instanceDim = instance.getCachedDimensionType();
+
+        final int x = mutation.getBlockPosition().blockX();
+        final int y = mutation.getBlockPosition().blockY();
+        final int z = mutation.getBlockPosition().blockZ();
+
+        final Block block = mutation.getBlock();
+
         if (y >= instanceDim.maxY() || y < instanceDim.minY()) {
             LOGGER.warn("tried to set a block outside the world bounds, should be within [{}, {}): {}",
                     instanceDim.minY(), instanceDim.maxY(), y);
@@ -96,17 +102,11 @@ public class DynamicChunk extends Chunk {
         int sectionRelativeX = globalToSectionRelative(x);
         int sectionRelativeZ = globalToSectionRelative(z);
 
-        section.blockPalette().set(
-                sectionRelativeX,
-                globalToSectionRelative(y),
-                sectionRelativeZ,
-                block.stateId()
-        );
-
         final int index = CoordConversion.chunkBlockIndex(x, y, z);
         // Handler
         final BlockHandler handler = block.handler();
         final Block lastCachedBlock;
+
         if (handler != null || block.hasNbt() || block.registry().isBlockEntity()) {
             lastCachedBlock = this.entries.put(index, block);
         } else {
@@ -119,21 +119,21 @@ public class DynamicChunk extends Chunk {
             this.tickableMap.remove(index);
         }
 
-        // Update block handlers
-        var blockPosition = new Vec(x, y, z);
         if (lastCachedBlock != null && lastCachedBlock.handler() != null) {
             // Previous destroy
-            lastCachedBlock.handler().onDestroy(Objects.requireNonNullElseGet(destroy,
-                    () -> new BlockHandler.Destroy(lastCachedBlock, instance, blockPosition)));
+            lastCachedBlock.handler().onDestroy(mutation);
         }
         if (handler != null) {
             // New placement
-
-            var absoluteBlockPosition = new Vec(getChunkX() * 16 + x, y, getChunkZ() * 16 + z);
-            final Block finalBlock = block;
-            handler.onPlace(Objects.requireNonNullElseGet(placement,
-                    () -> new BlockHandler.Placement(finalBlock, instance, absoluteBlockPosition)));
+            handler.onPlace(mutation);
         }
+
+        section.blockPalette().set(
+                sectionRelativeX,
+                globalToSectionRelative(y),
+                sectionRelativeZ,
+                block.stateId()
+        );
 
         // UpdateHeightMaps
         if (needsCompleteHeightmapRefresh) calculateFullHeightmap();
