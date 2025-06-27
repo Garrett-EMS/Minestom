@@ -1,15 +1,9 @@
 package net.minestom.demo.block.placement;
 
-import net.minestom.server.coordinate.Pos;
-import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 /**
  * https://gist.github.com/mworzala/0676c28343310458834d70ed29b11a37
