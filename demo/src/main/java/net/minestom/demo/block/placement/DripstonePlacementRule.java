@@ -15,7 +15,7 @@ public class DripstonePlacementRule extends BlockPlacementRule {
     }
 
     @Override
-    public void blockPlace(@NotNull BlockMutation placementState) {
+    public @NotNull BlockMutation blockPlace(@NotNull BlockMutation mutation) {
         System.out.println("test3");
 //        var blockFace = Objects.requireNonNullElse(placementState.blockFace(), BlockFace.TOP);
 //        var direction = switch (blockFace) {
@@ -28,14 +28,16 @@ public class DripstonePlacementRule extends BlockPlacementRule {
 //                PROP_VERTICAL_DIRECTION, direction,
 //                PROP_THICKNESS, thickness
 //        ));
+        return mutation;
     }
 
     @Override
-    public @NotNull void blockUpdate(@NotNull BlockMutation updateState) {
+    public @NotNull BlockMutation blockUpdate(@NotNull BlockMutation mutation) {
         System.out.println("test2");
 //        var direction = updateState.currentBlock().getProperty(PROP_VERTICAL_DIRECTION).equals("up");
 //        var newThickness = getThickness(updateState.instance(), updateState.blockPosition(), direction);
 //        return updateState.currentBlock().withProperty(PROP_THICKNESS, newThickness);
+        return mutation;
     }
 
     private @NotNull String getThickness(@NotNull Block.Getter instance, @NotNull Point blockPosition, boolean direction) {

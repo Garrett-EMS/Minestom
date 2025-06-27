@@ -15,12 +15,13 @@ public class TestBlockHandler implements BlockHandler {
     }
 
     @Override
-    public void onPlace(@NotNull BlockMutation placement) {
-        placement.setBlock(Block.DIAMOND_BLOCK);
+    public @NotNull BlockMutation onPlace(@NotNull BlockMutation mutation) {
+        return mutation.setBlock(Block.DIAMOND_BLOCK);
     }
 
     @Override
-    public void onDestroy(@NotNull BlockMutation destroy) {
+    public @NotNull BlockMutation onDestroy(@NotNull BlockMutation mutation) {
         System.out.println("broken");
+        return mutation;
     }
 }

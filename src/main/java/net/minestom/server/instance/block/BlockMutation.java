@@ -1,83 +1,49 @@
 package net.minestom.server.instance.block;
 
 import net.minestom.server.coordinate.Point;
-import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface BlockMutation {
+public sealed interface BlockMutation {
 
     @NotNull
-    Block.Getter getInstance();
+    Block.Getter instance();
 
     @NotNull
-    Point getBlockPosition();
+    Point blockPosition();
 
     @NotNull
-    Block getBlock();
+    Block block();
 
     @Nullable
-    BlockFace getBlockFace();
+    BlockFace blockFace();
 
-    void setBlock(@NotNull Block newBlock);
+    BlockMutation setBlock(@NotNull Block newBlock);
 
-    interface InstanceMutation extends BlockMutation {
-        static InstanceMutation of(@NotNull Block.Getter instance, @NotNull Point blockPosition,
-                                   @NotNull Block newBlock, @Nullable BlockFace blockFace) {
+    record Instance(
+        @NotNull Block.Getter instance, @NotNull Point blockPosition,
+        @NotNull Block block, @Nullable BlockFace blockFace
+    ) implements BlockMutation {
 
-            return new InstanceMutation() {
-                private Block currentNewBlock = newBlock;
-
-                @Override
-                public @NotNull Block.Getter getInstance() { return instance; }
-
-                @Override
-                public @NotNull Point getBlockPosition() { return blockPosition; }
-
-                @Override
-                public @NotNull Block getBlock() { return currentNewBlock; }
-
-                @Override
-                public @Nullable BlockFace getBlockFace() { return blockFace; }
-
-                @Override
-                public void setBlock(@NotNull Block newBlock) {
-                    this.currentNewBlock = newBlock;
-                }
-            };
+        @Override
+        public BlockMutation setBlock(@NotNull Block newBlock) {
+            return new Instance(instance, blockPosition, newBlock, blockFace);
         }
     }
 
-    interface PlayerMutation extends BlockMutation {
-        @NotNull Player getPlayer();
-        @NotNull BlockFace getBlockFace();
+    record Player(
+        @NotNull Block.Getter instance, @NotNull Point blockPosition,
+        @NotNull Block block, @NotNull BlockFace blockFace,
+        @NotNull net.minestom.server.entity.Player player
+    ) implements BlockMutation {
 
-        static PlayerMutation of(@NotNull Block.Getter instance, @NotNull Player player,
-                                 @NotNull Point blockPosition, @NotNull Block newBlock,
-                                 @NotNull BlockFace blockFace) {
+        public @NotNull net.minestom.server.entity.Player player() {
+            return player;
+        }
 
-            return new PlayerMutation() {
-                private Block currentNewBlock = newBlock;
-
-                @Override
-                public @NotNull Block.Getter getInstance() { return instance; }
-
-                @Override
-                public @NotNull Player getPlayer() { return player; }
-
-                @Override
-                public @NotNull Point getBlockPosition() { return blockPosition; }
-
-                @Override
-                public @NotNull Block getBlock() { return currentNewBlock; }
-
-                @Override
-                public @NotNull BlockFace getBlockFace() { return blockFace; }
-
-                @Override
-                public void setBlock(@NotNull Block newBlock) { this.currentNewBlock = newBlock; }
-
-            };
+        @Override
+        public BlockMutation setBlock(@NotNull Block newBlock) {
+            return new Player(instance, blockPosition, newBlock, blockFace, player);
         }
     }
 }

@@ -92,10 +92,10 @@ public abstract class Chunk implements Block.Getter, Block.Setter, Biome.Getter,
      */
     @Override
     public void setBlock(int x, int y, int z, @NotNull Block block) {
-        setBlock(BlockMutation.InstanceMutation.of(this, new Vec(x, y, z), block, null));
+        setBlock(new BlockMutation.Instance(this, new Vec(x, y, z), block, null));
     }
 
-    protected abstract void setBlock(@NotNull BlockMutation mutation);
+    protected abstract @NotNull BlockMutation setBlock(@NotNull BlockMutation mutation);
 
     public abstract @NotNull List<Section> getSections();
 

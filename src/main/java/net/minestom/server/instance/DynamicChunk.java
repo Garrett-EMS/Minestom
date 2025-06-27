@@ -78,19 +78,19 @@ public class DynamicChunk extends Chunk {
     }
 
     @Override
-    public void setBlock(@NotNull BlockMutation mutation) {
+    public @NotNull BlockMutation setBlock(@NotNull BlockMutation mutation) {
         final DimensionType instanceDim = instance.getCachedDimensionType();
 
-        final int x = mutation.getBlockPosition().blockX();
-        final int y = mutation.getBlockPosition().blockY();
-        final int z = mutation.getBlockPosition().blockZ();
+        final int x = mutation.blockPosition().blockX();
+        final int y = mutation.blockPosition().blockY();
+        final int z = mutation.blockPosition().blockZ();
 
-        final Block block = mutation.getBlock();
+        final Block block = mutation.block();
 
         if (y >= instanceDim.maxY() || y < instanceDim.minY()) {
             LOGGER.warn("tried to set a block outside the world bounds, should be within [{}, {}): {}",
                     instanceDim.minY(), instanceDim.maxY(), y);
-            return;
+            return mutation;
         }
         assertLock();
 
@@ -121,11 +121,11 @@ public class DynamicChunk extends Chunk {
 
         if (lastCachedBlock != null && lastCachedBlock.handler() != null) {
             // Previous destroy
-            lastCachedBlock.handler().onDestroy(mutation);
+            mutation = lastCachedBlock.handler().onDestroy(mutation);
         }
         if (handler != null) {
             // New placement
-            handler.onPlace(mutation);
+            mutation = handler.onPlace(mutation);
         }
 
         section.blockPalette().set(
@@ -139,6 +139,8 @@ public class DynamicChunk extends Chunk {
         if (needsCompleteHeightmapRefresh) calculateFullHeightmap();
         motionBlocking.refresh(sectionRelativeX, y, sectionRelativeZ, block);
         worldSurface.refresh(sectionRelativeX, y, sectionRelativeZ, block);
+
+        return mutation;
     }
 
     @Override

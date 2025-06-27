@@ -187,9 +187,9 @@ public abstract class Instance implements Block.Getter, Block.Setter,
 
     public abstract void setBlock(int x, int y, int z, @NotNull Block block, boolean doBlockUpdates);
 
-    public abstract boolean placeBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates);
+    public abstract boolean placeBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates);
 
-    public abstract boolean breakBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates);
+    public abstract boolean breakBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates);
 
     /**
      * Forces the generation of a {@link Chunk}, even if no file and {@link Generator} are defined.

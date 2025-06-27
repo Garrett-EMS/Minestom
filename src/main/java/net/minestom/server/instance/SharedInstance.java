@@ -33,12 +33,12 @@ public class SharedInstance extends Instance {
     }
 
     @Override
-    public boolean placeBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates) {
+    public boolean placeBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates) {
         return instanceContainer.placeBlock(mutation, doBlockUpdates);
     }
 
     @Override
-    public boolean breakBlock(@NotNull BlockMutation.PlayerMutation mutation, boolean doBlockUpdates) {
+    public boolean breakBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates) {
         return instanceContainer.breakBlock(mutation, doBlockUpdates);
     }
 

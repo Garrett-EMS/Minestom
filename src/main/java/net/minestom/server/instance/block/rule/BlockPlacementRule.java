@@ -20,7 +20,9 @@ public abstract class BlockPlacementRule {
      * Called when the block state id can be updated (for instance if a neighbour block changed).
      * This is first called on a newly placed block, and then this is called for all neighbors of the block
      */
-    public void blockUpdate(@NotNull BlockMutation mutation) { }
+    public @NotNull BlockMutation blockUpdate(@NotNull BlockMutation mutation) {
+        return mutation;
+    }
 
     /**
      * Called when the block is placed.
@@ -28,7 +30,7 @@ public abstract class BlockPlacementRule {
      *
      * @return the block to place, {@code null} to cancel
      */
-    public abstract void blockPlace(@NotNull BlockMutation mutation);
+    public abstract @NotNull BlockMutation blockPlace(@NotNull BlockMutation mutation);
 
     public boolean isSelfReplaceable(@NotNull Replacement replacement) {
         return false;

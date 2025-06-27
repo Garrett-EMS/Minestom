@@ -182,11 +182,11 @@ public final class PlayerDiggingListener {
         });
     }
 
-    private static DiggingResult breakBlock(Instance instance,
-                                            Player player,
-                                            Point blockPosition, Block previousBlock, BlockFace blockFace) {
+    private static DiggingResult breakBlock(Instance instance, Player player,
+                                            Point blockPosition, Block previousBlock,
+                                            BlockFace blockFace) {
         // Unverified block break, client is fully responsible
-        final boolean success = instance.breakBlock(BlockMutation.PlayerMutation.of(instance, player, blockPosition, Block.AIR, blockFace), true);
+        final boolean success = instance.breakBlock(new BlockMutation.Player(instance, blockPosition, Block.AIR, blockFace, player), true);
         final Block updatedBlock = instance.getBlock(blockPosition);
         if (!success) {
             if (previousBlock.isSolid()) {
