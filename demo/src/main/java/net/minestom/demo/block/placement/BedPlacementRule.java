@@ -32,16 +32,18 @@ public class BedPlacementRule extends BlockPlacementRule {
         var facing = BlockFace.fromYaw(playerPosition.yaw());
 
         //todo bad code using instance directly
-        if (!(mut.instance() instanceof Instance instance)) return null;
+        if (!(mut.instance() instanceof Instance instance)) return mut;
 
         var headPosition = mutation.blockPosition().relative(facing);
         if (!instance.getBlock(headPosition, Block.Getter.Condition.TYPE).isAir())
-            return null;
+            return mut;
+
+        System.out.println(facing.name());
 
         var headBlock = this.block.withProperty(PROP_PART, "head")
                 .withProperty(PROP_FACING, facing.name().toLowerCase());
         instance.setBlock(headPosition, headBlock);
 
-        return mutation;
+        return mut.setBlock(mut.block().withProperty(PROP_PART, "foot").withProperty(PROP_FACING, facing.name().toLowerCase()));
     }
 }
