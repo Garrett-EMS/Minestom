@@ -3,7 +3,7 @@ package net.minestom.demo.block.placement;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +21,8 @@ public class BedPlacementRule extends BlockPlacementRule {
     }
 
     @Override
-    public @NotNull Block blockPlace(@NotNull BlockMutation mutation) {
-        if( !(mutation instanceof BlockMutation.Player mut)) {
+    public @NotNull Block blockPlace(@NotNull BlockChange mutation) {
+        if( !(mutation instanceof BlockChange.Player mut)) {
             return mutation.block(); // not a player placement
         }
         var playerPosition = mut.player().getPosition();

@@ -6,11 +6,10 @@ import net.kyori.adventure.nbt.LongArrayBinaryTag;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.CoordConversion;
 import net.minestom.server.coordinate.Point;
-import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockHandler;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.instance.heightmap.Heightmap;
 import net.minestom.server.instance.heightmap.MotionBlockingHeightmap;
 import net.minestom.server.instance.heightmap.WorldSurfaceHeightmap;
@@ -78,7 +77,7 @@ public class DynamicChunk extends Chunk {
     }
 
     @Override
-    public @NotNull Block setBlock(@NotNull BlockMutation mutation) {
+    public @NotNull Block setBlock(@NotNull BlockChange mutation) {
         final DimensionType instanceDim = instance.getCachedDimensionType();
 
         final int x = mutation.blockPosition().blockX();
@@ -123,10 +122,10 @@ public class DynamicChunk extends Chunk {
             this.tickableMap.remove(index);
         }
 
+        this.entries.remove(index);
+
         if (shouldCache) {
             this.entries.put(index, block);
-        } else {
-            this.entries.remove(index);
         }
 
         section.blockPalette().set(

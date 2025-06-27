@@ -7,7 +7,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerHand;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.tag.Tag;
-import net.minestom.server.utils.time.Tick;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,14 +25,14 @@ public interface BlockHandler {
     /**
      * Called when a block has been placed.
      */
-    default @NotNull Block onPlace(@NotNull BlockMutation mutation) {
+    default @NotNull Block onPlace(@NotNull BlockChange mutation) {
         return mutation.block();
     }
 
     /**
      * Called when a block has been destroyed or replaced.
      */
-    default @NotNull Block onDestroy(@NotNull BlockMutation mutation) {
+    default @NotNull Block onDestroy(@NotNull BlockChange mutation) {
         return mutation.block();
     }
 

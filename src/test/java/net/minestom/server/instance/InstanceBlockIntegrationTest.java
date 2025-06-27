@@ -2,14 +2,13 @@ package net.minestom.server.instance;
 
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.instance.block.SuspiciousGravelBlockHandler;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import net.minestom.server.tag.Tag;
 import net.minestom.testing.Env;
 import net.minestom.testing.EnvTest;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -88,12 +87,12 @@ public class InstanceBlockIntegrationTest {
         env.process().block().registerHandler(SuspiciousGravelBlockHandler.INSTANCE.getKey(), () -> SuspiciousGravelBlockHandler.INSTANCE);
         env.process().block().registerBlockPlacementRule(new BlockPlacementRule(Block.SUSPICIOUS_GRAVEL) {
             @Override
-            public @NotNull Block blockPlace(@NotNull BlockMutation mutation) {
+            public @NotNull Block blockPlace(@NotNull BlockChange mutation) {
                 return mutation.block();
             }
 
             @Override
-            public @NotNull Block blockUpdate(@NotNull BlockMutation mutation) {
+            public @NotNull Block blockUpdate(@NotNull BlockChange mutation) {
                 currentBlock.set(mutation.block());
                 return super.blockUpdate(mutation);
             }

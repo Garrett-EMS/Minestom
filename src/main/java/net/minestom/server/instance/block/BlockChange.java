@@ -4,7 +4,7 @@ import net.minestom.server.coordinate.Point;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public sealed interface BlockMutation {
+public sealed interface BlockChange {
 
     @NotNull
     Block.Getter instance();
@@ -18,15 +18,16 @@ public sealed interface BlockMutation {
     @Nullable
     BlockFace blockFace();
 
-    BlockMutation withBlock(@NotNull Block newBlock);
+    @NotNull
+    BlockChange withBlock(@NotNull Block newBlock);
 
     record Instance(
         @NotNull Block.Getter instance, @NotNull Point blockPosition,
         @NotNull Block block, @Nullable BlockFace blockFace
-    ) implements BlockMutation {
+    ) implements BlockChange {
 
         @Override
-        public BlockMutation withBlock(@NotNull Block newBlock) {
+        public @NotNull BlockChange withBlock(@NotNull Block newBlock) {
             return new Instance(instance, blockPosition, newBlock, blockFace);
         }
     }
@@ -35,14 +36,14 @@ public sealed interface BlockMutation {
         @NotNull Block.Getter instance, @NotNull Point blockPosition,
         @NotNull Block block, @NotNull BlockFace blockFace,
         @NotNull net.minestom.server.entity.Player player
-    ) implements BlockMutation {
+    ) implements BlockChange {
 
         public @NotNull net.minestom.server.entity.Player player() {
             return player;
         }
 
         @Override
-        public BlockMutation withBlock(@NotNull Block newBlock) {
+        public @NotNull BlockChange.Player withBlock(@NotNull Block newBlock) {
             return new Player(instance, blockPosition, newBlock, blockFace, player);
         }
     }

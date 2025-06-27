@@ -3,7 +3,7 @@ package net.minestom.server.instance.block.rule;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ public abstract class BlockPlacementRule {
      * Called when the block state id can be updated (for instance if a neighbour block changed).
      * This is first called on a newly placed block, and then this is called for all neighbors of the block
      */
-    public @NotNull Block blockUpdate(@NotNull BlockMutation mutation) {
+    public @NotNull Block blockUpdate(@NotNull BlockChange mutation) {
         return mutation.block();
     }
 
@@ -30,7 +30,7 @@ public abstract class BlockPlacementRule {
      *
      * @return the block to place, {@code null} to cancel
      */
-    public abstract @NotNull Block blockPlace(@NotNull BlockMutation mutation);
+    public abstract @NotNull Block blockPlace(@NotNull BlockChange mutation);
 
     public boolean isSelfReplaceable(@NotNull Replacement replacement) {
         return false;

@@ -3,7 +3,7 @@ package net.minestom.demo.block.placement;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,8 +19,8 @@ public class DripstonePlacementRule extends BlockPlacementRule {
     }
 
     @Override
-    public @NotNull Block blockPlace(@NotNull BlockMutation mutation) {
-        if (!(mutation instanceof BlockMutation.Player mut)) {
+    public @NotNull Block blockPlace(@NotNull BlockChange mutation) {
+        if (!(mutation instanceof BlockChange.Player mut)) {
             return mutation.block(); // not a player placement
         }
         var blockFace = mut.blockFace();
@@ -37,7 +37,7 @@ public class DripstonePlacementRule extends BlockPlacementRule {
     }
 
     @Override
-    public @NotNull Block blockUpdate(@NotNull BlockMutation mutation) {
+    public @NotNull Block blockUpdate(@NotNull BlockChange mutation) {
         var direction = mutation.block().getProperty(PROP_VERTICAL_DIRECTION).equals("up");
         var newThickness = getThickness(mutation.instance(), mutation.blockPosition(), direction);
         return mutation.block().withProperty(PROP_THICKNESS, newThickness);

@@ -26,9 +26,7 @@ import net.minestom.server.event.EventNode;
 import net.minestom.server.event.instance.InstanceTickEvent;
 import net.minestom.server.event.trait.InstanceEvent;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockFace;
-import net.minestom.server.instance.block.BlockHandler;
-import net.minestom.server.instance.block.BlockMutation;
+import net.minestom.server.instance.block.BlockChange;
 import net.minestom.server.instance.generator.Generator;
 import net.minestom.server.instance.light.Light;
 import net.minestom.server.network.packet.server.ServerPacket;
@@ -187,9 +185,9 @@ public abstract class Instance implements Block.Getter, Block.Setter,
 
     public abstract void setBlock(int x, int y, int z, @NotNull Block block, boolean doBlockUpdates);
 
-    public abstract boolean placeBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates);
+    public abstract boolean placeBlock(@NotNull BlockChange.Player mutation, boolean doBlockUpdates);
 
-    public abstract boolean breakBlock(@NotNull BlockMutation.Player mutation, boolean doBlockUpdates);
+    public abstract boolean breakBlock(@NotNull BlockChange.Player mutation, boolean doBlockUpdates);
 
     /**
      * Forces the generation of a {@link Chunk}, even if no file and {@link Generator} are defined.
