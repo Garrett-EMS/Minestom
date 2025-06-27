@@ -155,7 +155,6 @@ public class InstanceContainer extends Instance {
             this.lastBlockChangeTime = System.currentTimeMillis();
 
             final BlockPlacementRule placementRule = MinecraftServer.getBlockManager().getBlockPlacementRule(mutation.block());
-            System.out.println(placementRule);
             if(placementRule != null && doBlockUpdates) {
                 mutation = placementRule.blockPlace(mutation);
             }
@@ -201,6 +200,7 @@ public class InstanceContainer extends Instance {
             chunk.sendChunk(mutation.player());
             return false;
         }
+        System.out.println(block);
         PlayerBlockBreakEvent blockBreakEvent = new PlayerBlockBreakEvent(mutation.player(), block, Block.AIR, new BlockVec(mutation.blockPosition()), mutation.blockFace());
         EventDispatcher.call(blockBreakEvent);
         final boolean allowed = !blockBreakEvent.isCancelled();

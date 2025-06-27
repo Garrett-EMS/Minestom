@@ -21,7 +21,6 @@ public class TestBlockHandler implements BlockHandler {
 
     @Override
     public @NotNull BlockMutation onDestroy(@NotNull BlockMutation mutation) {
-        System.out.println("broken");
-        return mutation;
+        return mutation.setBlock(Block.EMERALD_BLOCK);
     }
 }

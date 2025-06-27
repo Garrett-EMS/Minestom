@@ -85,7 +85,7 @@ public class DynamicChunk extends Chunk {
         final int y = mutation.blockPosition().blockY();
         final int z = mutation.blockPosition().blockZ();
 
-        final Block block = mutation.block();
+        Block block = mutation.block();
 
         if (y >= instanceDim.maxY() || y < instanceDim.minY()) {
             LOGGER.warn("tried to set a block outside the world bounds, should be within [{}, {}): {}",
@@ -105,13 +105,9 @@ public class DynamicChunk extends Chunk {
         final int index = CoordConversion.chunkBlockIndex(x, y, z);
         // Handler
         final BlockHandler handler = block.handler();
-        final Block lastCachedBlock;
+        final boolean shouldCache = handler != null || block.hasNbt() || block.registry().isBlockEntity();
+        final Block lastCachedBlock = shouldCache ? this.entries.get(index) : null;
 
-        if (handler != null || block.hasNbt() || block.registry().isBlockEntity()) {
-            lastCachedBlock = this.entries.put(index, block);
-        } else {
-            lastCachedBlock = this.entries.remove(index);
-        }
         // Block tick
         if (handler != null && handler.isTickable()) {
             this.tickableMap.put(index, block);
@@ -119,13 +115,19 @@ public class DynamicChunk extends Chunk {
             this.tickableMap.remove(index);
         }
 
+        // Handle previous destroy and new placement
         if (lastCachedBlock != null && lastCachedBlock.handler() != null) {
-            // Previous destroy
             mutation = lastCachedBlock.handler().onDestroy(mutation);
         }
         if (handler != null) {
-            // New placement
             mutation = handler.onPlace(mutation);
+        }
+
+        block = mutation.block();
+        if (shouldCache) {
+            this.entries.put(index, block);
+        } else {
+            this.entries.remove(index);
         }
 
         section.blockPalette().set(
