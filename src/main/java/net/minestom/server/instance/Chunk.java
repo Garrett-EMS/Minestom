@@ -8,7 +8,6 @@ import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.instance.block.BlockHandler;
 import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.generator.Generator;
 import net.minestom.server.instance.heightmap.Heightmap;
@@ -22,7 +21,6 @@ import net.minestom.server.world.DimensionType;
 import net.minestom.server.world.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -95,7 +93,7 @@ public abstract class Chunk implements Block.Getter, Block.Setter, Biome.Getter,
         setBlock(new BlockMutation.Instance(this, new Vec(x, y, z), block, null));
     }
 
-    protected abstract @NotNull BlockMutation setBlock(@NotNull BlockMutation mutation);
+    protected abstract @NotNull Block setBlock(@NotNull BlockMutation mutation);
 
     public abstract @NotNull List<Section> getSections();
 

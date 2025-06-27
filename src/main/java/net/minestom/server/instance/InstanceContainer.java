@@ -156,10 +156,10 @@ public class InstanceContainer extends Instance {
 
             final BlockPlacementRule placementRule = MinecraftServer.getBlockManager().getBlockPlacementRule(mutation.block());
             if(placementRule != null && doBlockUpdates) {
-                mutation = placementRule.blockPlace(mutation);
+                mutation = mutation.withBlock(placementRule.blockPlace(mutation));
             }
 
-            mutation = chunk.setBlock(mutation);
+            mutation = mutation.withBlock(chunk.setBlock(mutation));
 
             // Refresh neighbors since a new block has been placed
             if (doBlockUpdates) {
@@ -205,7 +205,7 @@ public class InstanceContainer extends Instance {
         final boolean allowed = !blockBreakEvent.isCancelled();
         if (allowed) {
             // Break or change the broken block based on event result
-            mutation = (BlockMutation.Player) mutation.setBlock(blockBreakEvent.getResultBlock());
+            mutation = (BlockMutation.Player) mutation.withBlock(blockBreakEvent.getResultBlock());
             UNSAFE_setBlock(chunk, mutation, doBlockUpdates, 0);
             // Send the block break effect packet
             BlockMutation.@NotNull Player finalMutation = mutation;
@@ -652,7 +652,7 @@ public class InstanceContainer extends Instance {
                     updateFace.getOppositeFace()
             );
 
-            mutation = neighborBlockPlacementRule.blockUpdate(mutation);
+            mutation = mutation.withBlock(neighborBlockPlacementRule.blockUpdate(mutation));
 
             if (neighborBlock != mutation.block()) {
                 final Chunk chunk = getChunkAt(neighborPosition);

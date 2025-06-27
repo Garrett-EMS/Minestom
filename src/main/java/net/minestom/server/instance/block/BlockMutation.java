@@ -18,7 +18,7 @@ public sealed interface BlockMutation {
     @Nullable
     BlockFace blockFace();
 
-    BlockMutation setBlock(@NotNull Block newBlock);
+    BlockMutation withBlock(@NotNull Block newBlock);
 
     record Instance(
         @NotNull Block.Getter instance, @NotNull Point blockPosition,
@@ -26,7 +26,7 @@ public sealed interface BlockMutation {
     ) implements BlockMutation {
 
         @Override
-        public BlockMutation setBlock(@NotNull Block newBlock) {
+        public BlockMutation withBlock(@NotNull Block newBlock) {
             return new Instance(instance, blockPosition, newBlock, blockFace);
         }
     }
@@ -42,7 +42,7 @@ public sealed interface BlockMutation {
         }
 
         @Override
-        public BlockMutation setBlock(@NotNull Block newBlock) {
+        public BlockMutation withBlock(@NotNull Block newBlock) {
             return new Player(instance, blockPosition, newBlock, blockFace, player);
         }
     }

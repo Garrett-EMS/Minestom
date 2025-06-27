@@ -26,15 +26,15 @@ public interface BlockHandler {
     /**
      * Called when a block has been placed.
      */
-    default @NotNull BlockMutation onPlace(@NotNull BlockMutation mutation) {
-        return mutation;
+    default @NotNull Block onPlace(@NotNull BlockMutation mutation) {
+        return mutation.block();
     }
 
     /**
      * Called when a block has been destroyed or replaced.
      */
-    default @NotNull BlockMutation onDestroy(@NotNull BlockMutation mutation) {
-        return mutation;
+    default @NotNull Block onDestroy(@NotNull BlockMutation mutation) {
+        return mutation.block();
     }
 
     /**

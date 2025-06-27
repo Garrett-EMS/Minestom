@@ -2,6 +2,7 @@ package net.minestom.server.instance;
 
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.BlockMutation;
 import net.minestom.server.instance.block.SuspiciousGravelBlockHandler;
 import net.minestom.server.instance.block.rule.BlockPlacementRule;
 import net.minestom.server.tag.Tag;
@@ -87,14 +88,14 @@ public class InstanceBlockIntegrationTest {
         env.process().block().registerHandler(SuspiciousGravelBlockHandler.INSTANCE.getKey(), () -> SuspiciousGravelBlockHandler.INSTANCE);
         env.process().block().registerBlockPlacementRule(new BlockPlacementRule(Block.SUSPICIOUS_GRAVEL) {
             @Override
-            public @Nullable Block blockPlace(@NotNull PlacementState placementState) {
-                return block;
+            public @NotNull Block blockPlace(@NotNull BlockMutation mutation) {
+                return mutation.block();
             }
 
             @Override
-            public @NotNull Block blockUpdate(@NotNull UpdateState updateState) {
-                currentBlock.set(updateState.currentBlock());
-                return super.blockUpdate(updateState);
+            public @NotNull Block blockUpdate(@NotNull BlockMutation mutation) {
+                currentBlock.set(mutation.block());
+                return super.blockUpdate(mutation);
             }
         });
 

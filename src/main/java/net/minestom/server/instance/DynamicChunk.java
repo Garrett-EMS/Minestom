@@ -78,7 +78,7 @@ public class DynamicChunk extends Chunk {
     }
 
     @Override
-    public @NotNull BlockMutation setBlock(@NotNull BlockMutation mutation) {
+    public @NotNull Block setBlock(@NotNull BlockMutation mutation) {
         final DimensionType instanceDim = instance.getCachedDimensionType();
 
         final int x = mutation.blockPosition().blockX();
@@ -90,7 +90,7 @@ public class DynamicChunk extends Chunk {
         if (y >= instanceDim.maxY() || y < instanceDim.minY()) {
             LOGGER.warn("tried to set a block outside the world bounds, should be within [{}, {}): {}",
                     instanceDim.minY(), instanceDim.maxY(), y);
-            return mutation;
+            return block;
         }
         assertLock();
 
@@ -108,6 +108,14 @@ public class DynamicChunk extends Chunk {
         final boolean shouldCache = handler != null || block.hasNbt() || block.registry().isBlockEntity();
         final Block lastCachedBlock = shouldCache ? this.entries.get(index) : null;
 
+        // Handle previous destroy and new placement
+        if (lastCachedBlock != null && lastCachedBlock.handler() != null) {
+            block = lastCachedBlock.handler().onDestroy(mutation);
+        }
+        if (handler != null) {
+            block = handler.onPlace(mutation);
+        }
+
         // Block tick
         if (handler != null && handler.isTickable()) {
             this.tickableMap.put(index, block);
@@ -115,15 +123,6 @@ public class DynamicChunk extends Chunk {
             this.tickableMap.remove(index);
         }
 
-        // Handle previous destroy and new placement
-        if (lastCachedBlock != null && lastCachedBlock.handler() != null) {
-            mutation = lastCachedBlock.handler().onDestroy(mutation);
-        }
-        if (handler != null) {
-            mutation = handler.onPlace(mutation);
-        }
-
-        block = mutation.block();
         if (shouldCache) {
             this.entries.put(index, block);
         } else {
@@ -142,7 +141,7 @@ public class DynamicChunk extends Chunk {
         motionBlocking.refresh(sectionRelativeX, y, sectionRelativeZ, block);
         worldSurface.refresh(sectionRelativeX, y, sectionRelativeZ, block);
 
-        return mutation;
+        return block;
     }
 
     @Override
