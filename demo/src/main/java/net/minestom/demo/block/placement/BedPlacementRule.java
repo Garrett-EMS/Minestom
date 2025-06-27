@@ -20,7 +20,7 @@ public class BedPlacementRule extends BlockPlacementRule {
 
     @Override
     public @NotNull BlockMutation blockPlace(@NotNull BlockMutation mutation) {
-        System.out.println("test2");
+        System.out.println("test");
 //        var playerPosition = Objects.requireNonNullElse(placementState.playerPosition(), Pos.ZERO);
 //        var facing = BlockFace.fromYaw(playerPosition.yaw());
 //
